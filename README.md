@@ -42,7 +42,7 @@ StandardScaler: Para Idade (distribuição próxima da normal).
 PowerTransformer: Para outras variáveis numéricas.
 
 ## ⚙️ Modelos Testados
-
+![comparativo](relatorios/imagens/comparativo.png)
 Modelo	Ajustes Especiais	Melhor Métrica (Avg Precision)
 LogisticRegression	class_weight='balanced', GridSearch (C, penalty)	0.61
 LGBMClassifier	scale_pos_weight=5.2	0.51
@@ -52,6 +52,8 @@ SVC	-	0.63
 DecisionTree	class_weight='balanced'	0.226
 
 ## 📉 Resultados
+
+![matriz_confusao](relatorios/imagens/matriz.png)
 
 Melhor modelo: Regressão Logística com ElasticNet (C=0.1, l1_ratio=0.1).
 
@@ -89,7 +91,7 @@ Variáveis como hora extra, viagens e estado civil são críticas para prever at
 
 A aplicação do modelo para a previsão de valores foi feita através do Streamlit, tornando o processo mais simples e intuitivo. O app solicita apenas a inserção do condado, idade do imóvel e renda média da região. Além disso, o app permite a visualização da região em um mapa.
 
-[' Análise Preditiva de Attrition '](https://exemplocalifornia-fbps.streamlit.app/)
+[' Análise Preditiva de Attrition '](https://predictive-attrition-analysis-fbps.streamlit.app/)
 ![Imagem](relatorios/imagens/streamlit.png)
 
 
