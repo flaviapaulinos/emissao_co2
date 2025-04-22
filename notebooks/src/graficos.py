@@ -1,129 +1,95 @@
-import os
-
-os.environ["OMP_NUM_THREADS"] = "1" #evitar o warning do kmeans
-
 import matplotlib.pyplot as plt
-import pandas as pd
+import numpy as np
 import seaborn as sns
-
-from matplotlib.colors import ListedColormap
-
-from sklearn.cluster import KMeans
-from sklearn.compose import ColumnTransformer
-from sklearn.metrics import silhouette_score,  make_scorer
-
 
 sns.set_theme(palette="bright")
 
 PALETTE = "coolwarm"
 SCATTER_ALPHA = 0.2
 
-
-
-
-def graficos_elbow_silhouette(X, random_state=42, intervalo_k=(2, 11)):
-    """Gera os gráficos para os métodos Elbow e Silhouette.
-
-    Parameters
-    ----------
-    X : pandas.DataFrame
-        Dataframe com os dados.
-    random_state : int, opcional
-        Valor para fixar o estado aleatório para reprodutibilidade, por padrão 42
-    intervalo_k : tuple, opcional
-        Intervalo de valores de cluster, por padrão (2, 11)
-    """
-
-    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(15, 5), tight_layout=True)
-
-    elbow = {}
-    silhouette = []
-
-    k_range = range(*intervalo_k)
-
-    for i in k_range:
-        kmeans = KMeans(n_clusters=i, random_state=random_state, n_init=10)
-        kmeans.fit(X)
-        elbow[i] = kmeans.inertia_
-
-        labels = kmeans.labels_
-        silhouette.append(silhouette_score(X, labels))
-
-    sns.lineplot(x=list(elbow.keys()), y=list(elbow.values()), ax=axs[0])
-    axs[0].set_xlabel("K")
-    axs[0].set_xlabel("Inertia")
-    axs[0].set_title("Elbow Method")
-
-    sns.lineplot(x=list(k_range), y=silhouette, ax=axs[1])
-    axs[1].set_xlabel("K")
-    axs[1].set_xlabel("Silhouette Score")
-    axs[1].set_title("Silhouette Method")
-
+def grafico_componentes(estudo_pca):
+    fig, ax = plt.subplots()
+    
+    ax.plot(
+        range(1, estudo_pca['pca'].n_components_ +1),#a contagem de componentes normalmente começa com 1
+        np.cumsum(estudo_pca['pca'].explained_variance_ratio_),
+        color='C1',
+       
+    )
+    ax.axhline(y=0.85, color="C5", linestyle='--', label='85% Variância')
+    
+    ax.axhline(y=0.95, color="C4", linestyle='--', label='95% Variância')
+    ax.axhline(y=0.98, color="C0", linestyle='--', label='98% Variância')
+    
+    
+    ax.bar(
+        x=range(1, estudo_pca['pca'].n_components_ +1),
+        height= estudo_pca['pca'].explained_variance_ratio_,
+        color='C0',
+        alpha=0.5
+    )
+    ax.set_yticks(np.arange(0, 1.1, 0.1))
+    ax.grid(linestyle=':')
+    
+    ax.set_xlabel("Número de componentes")
+    ax.set_ylabel("Variância Explicada")
+    ax.set_title("Scree plot")
+    
+    ax.legend()
+        
     plt.show()
 
 
-def visualizar_clusters(
-    dataframe,
-    colunas,
-    quantidade_cores,
-    centroids,
-    mostrar_centroids=True,
-    mostrar_pontos=False,
-    coluna_clusters=None,
-):
-    """Gerar gráfico 3D com os clusters.
+def plot_coeficientes(df_coefs, titulo="Coeficientes"):
+    df_coefs.plot.barh(figsize=(9,12))
+    plt.title(titulo)
+    plt.axvline(x=0, color=".5")
+    plt.xlabel("Coeficientes")
+    plt.gca().get_legend().remove()
+    plt.tight_layout()
+    plt.show()
 
-    Parameters
-    ----------
-    dataframe : pandas.DataFrame
-        Dataframe com os dados.
-    colunas : List[str]
-        Lista com o nome das colunas (strings) a serem utilizadas.
-    quantidade_cores : int
-        Número de cores para o gráfico.
-    centroids : np.ndarray
-        Array com os centroides.
-    mostrar_centroids : bool, opcional
-        Se o gráfico irá mostrar os centroides ou não, por padrão True
-    mostrar_pontos : bool, opcional
-        Se o gráfico irá mostrar os pontos ou não, por padrão False
-    coluna_clusters : List[int], opcional
-        Coluna com os números dos clusters para colorir os pontos
-        (caso mostrar_pontos seja True), por padrão None
-    """
 
-    fig = plt.figure()
 
-    ax = fig.add_subplot(111, projection="3d")
+def plot_comparar_metricas_modelos(df_resultados, multi_class=False):
+    fig, axs = plt.subplots(4, 2, figsize=(9, 9), sharex=True)
 
-    cores = plt.cm.tab10.colors[:quantidade_cores]
-    cores = ListedColormap(cores)
+    comparar_metricas = [
+        "time_seconds",
+        "test_accuracy",
+        "test_balanced_accuracy",
+        "test_f1" if not multi_class else "test_f1_weighted",
+        "test_precision" if not multi_class else "test_precision_weighted",
+        "test_recall" if not multi_class else "test_recall_weighted",
+        "test_roc_auc" if not multi_class else "test_roc_auc_ovr",
+        "test_average_precision",
+        #"test_f2_score"
+    ]
 
-    x = dataframe[colunas[0]]
-    y = dataframe[colunas[1]]
-    z = dataframe[colunas[2]]
+    nomes_metricas = [
+        "Tempo (s)",
+        "Acurácia",
+        "Acurácia balanceada",
+        "F1",
+        "Precisão",
+        "Recall",
+        "AUROC",
+        "AUPRC",
+        #"F2"
+    ]
 
-    ligar_centroids = mostrar_centroids
-    ligar_pontos = mostrar_pontos
+    for ax, metrica, nome in zip(axs.flatten(), comparar_metricas, nomes_metricas):
+        sns.boxplot(
+            x="model",
+            y=metrica,
+            data=df_resultados,
+            ax=ax,
+            showmeans=True,
+        )
+        ax.set_title(nome)
+        ax.set_ylabel(nome)
+        ax.tick_params(axis="x", rotation=90)
 
-    for i, centroid in enumerate(centroids):
-        if ligar_centroids:
-            ax.scatter(*centroid, s=500, alpha=0.5)
-            ax.text(
-                *centroid,
-                f"{i}",
-                fontsize=20,
-                horizontalalignment="center",
-                verticalalignment="center",
-            )
-
-        if ligar_pontos:
-            s = ax.scatter(x, y, z, c=coluna_clusters, cmap=cores)
-            ax.legend(*s.legend_elements(), bbox_to_anchor=(1.3, 1))
-
-    ax.set_xlabel(colunas[0])
-    ax.set_ylabel(colunas[1])
-    ax.set_zlabel(colunas[2])
-    ax.set_title("Clusters")
+    plt.tight_layout()
 
     plt.show()

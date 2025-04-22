@@ -7,15 +7,14 @@ PASTA_IMAGENS = PASTA_RELATORIOS / "imagens"
 PASTA_MODELOS = PASTA_PROJETO / "modelos"
 
 
-DADOS_ORIGINAIS = PASTA_DADOS / "Mall_Customers.csv"
-DADOS_LIMPOS = PASTA_DADOS / "Mall_Customers-clean.parquet"
-DADOS_SCALED = PASTA_DADOS / "Mall_Customers-scaled.parquet"
-DADOS_CLUSTERED = PASTA_DADOS /  "Mall_Customers-clustered.parquet"
-DADOS_PCA_SCALED = PASTA_DADOS /  "Mall_Customers-pca.parquet"
+DADOS_ORIGINAIS = PASTA_DADOS / "employee_attrition.csv"
+DADOS_TRATADOS = PASTA_DADOS / "employee_attrition_tratados.parquet"
+DADOS_LIMPOS = PASTA_DADOS / "employee_attrition_limpos.parquet" 
+
 
 RELATORIO = PASTA_RELATORIOS / "00-fbps-eda.html"
-MODELO = PASTA_MODELOS / "modelo_clustering.pkl"
-MODELO_PCA = PASTA_MODELOS / "modelo_pca_clustering.pkl"
+MODELO = PASTA_MODELOS / "modelo.pkl"
+MODELO_FINAL = PASTA_MODELOS / "logistic_regression.joblib"
 
 
 
