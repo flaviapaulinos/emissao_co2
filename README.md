@@ -6,7 +6,7 @@ PT
 
 ## Visão Geral do Projeto
 
-Este projeto tem como objetivo prever attrition de funcionários com base em características demográficas, profissionais e de satisfação no trabalho. Utilizamos técnicas de Machine Learning para identificar os principais fatores que influenciam a saída de colaboradores.
+Este projeto tem como objetivo prever attrition de funcionários com base em características demográficas, profissionais e de satisfação no trabalho. Utilizei técnicas de Machine Learning para identificar os principais fatores que influenciam a saída de colaboradores.
 
 ## 🔍 Contexto
 
@@ -14,18 +14,19 @@ A base de dados contém:
 
 1.470 registros e 31 variáveis.
 
-Variáveis numéricas: Idade, Distância de casa, Renda mensal, Tempo de empresa, etc.
+Variáveis numéricas: idade, distância de casa, renda mensal, tempo de empresa, etc.
 
-Variáveis categóricas: Departamento, Cargo, Estado civil, Viagens a trabalho, etc.
+Variáveis categóricas: departamento, cargo, estado civil, viagens a trabalho, etc.
 
 Target: Attrition (Sim/Não) → Dados desbalanceados (apenas 16% de casos "Sim").
 
 ## 📊 Principais Desafios
+
 Desbalanceamento da classe target:
 
 Testar técnicas como Random OverSampling (ROS) e SMOTE-Tomek, mas os resultados foram piores que o modelo sem balanceamento.
 
-Solução: Usamos class_weight='balanced' e scale_pos_weight em modelos baseados em árvores.
+Solução: Usei class_weight='balanced' e scale_pos_weight em modelos baseados em árvores.
 
 Pré-processamento diferenciado:
 
@@ -43,6 +44,7 @@ PowerTransformer: Para outras variáveis numéricas.
 
 ## ⚙️ Modelos Testados
 ![comparativo](relatorios/imagens/comparativo.png)
+
 Modelo	Ajustes Especiais	Melhor Métrica (Avg Precision)
 LogisticRegression	class_weight='balanced', GridSearch (C, penalty)	0.61
 LGBMClassifier	scale_pos_weight=5.2	0.51
@@ -86,10 +88,15 @@ Funcionários com a renda mensal alta tem  36% menos chance de deixar a empresa
 A Regressão Logística teve o melhor desempenho, equilibrando recall e precisão.
 
 Técnicas de balanceamento (ROS, SMOTE-Tomek) não melhoraram os resultados.
+    
+    Algumas considerações a respeito:
+    
+        • Criticidade de outliers: Em problemas como attrition, casos raros (ex: um funcionário de alto desempenho que saiu) podem ser importantes, e SMOTE/ROS podem diluir seu impacto.
+        • O modelo original (não balanceado) pode ter mantido melhor a capacidade de identificar padrões genuínos.
 
 Variáveis como hora extra, viagens e estado civil são críticas para prever attrition.
 
-A aplicação do modelo para a previsão de attrition foi feita através do Streamlit, tornando o processo mais simples e intuitivo. Além disso, o app permite a visualização da probabilidade de attrition.
+A aplicação do modelo para a previsão de attrition foi feita através do Streamlit, tornando o processo mais simples e intuitivo. Além disso, o app permite a visualização da probabilidade de attrition para cada caso.
 
 ['Clique aqui para "Análise Preditiva de Attrition" '](https://predictive-attrition-analysis-fbps.streamlit.app/)
 ![Imagem](relatorios/imagens/streamlit.png)
@@ -99,23 +106,28 @@ A aplicação do modelo para a previsão de attrition foi feita através do Stre
 
 ## 🚀 Próximos Passos
 
-Plano de Ação
 
-Análise de horas extras:
+Plano de ação
 
-Verificar causas (ex.: falta de staff, organização deficiente).
+Avaliar os motivos que levam os funcionários a fazerem hora extra.
 
-Redução de viagens:
+    Mão de obra insuficiente
 
-Impacto no time de vendas.
+    Falta de organização institucional
 
-Benchmark salarial:
+    Falta de treinamento
 
-Comparar salários por setor com o mercado.
+    Necessidade de investimento em tecnologia
 
-Clima organizacional:
+Possibilidade de diminuir as viagens de negócios.
 
-Programas de retenção e satisfação.
+    Como isso afeta a equipe de vendas?
+
+Atenção aos funcionários de formação técnica
+
+    Como a renda mensal se compara com o mercado? 
+
+    Ações voltadas para o clima organizacional 
 
 ## Sobre a Base de Dados
 
