@@ -1,244 +1,155 @@
-# Segmentação de clientes de um supermercado/*Customer Segmentation for a Supermarket
-![Segmentação](relatorios/imagens/pca_plot_3d.png)
-
+# 📌 Análise Preditiva de Attrition 
+![analise](relatorios/imagens/countplot.png)
 
 
 PT
 
-📌 Visão Geral
-A segmentação de clientes com base em parâmetros pré-definidos como gastos com compras, renda anual, idade, sexo ajudam na formulação de estratégias de acordo com o perfil desses clientes. 
+## Visão Geral do Projeto
 
-Este projeto tem como objetivo segmentar esses clientes de acordo com os parâmetros fornecidos no dataset, usando kmeans, as bibibliotecas scikitlearn, matplotlib, pandas, técnicas de aprendizado não supervisionado de clusterização e  redução de diemnsionalidade
+Este projeto tem como objetivo prever attrition de funcionários com base em características demográficas, profissionais e de satisfação no trabalho. Utilizamos técnicas de Machine Learning para identificar os principais fatores que influenciam a saída de colaboradores.
 
-O conjunto de dados contém:
-✅ Idade
-✅ Gênero
-✅ Renda Anual (k$)
-✅ Pontuação de Gastos (1-100) (métrica definida pelo supermercado com base no comportamento de compra)
+## 🔍 Contexto
 
-🎯 Objetivo
-Identificar grupos de clientes com características semelhantes para auxiliar o supermercado em:
+A base de dados contém:
 
-Estratégias de marketing personalizadas
+1.470 registros e 31 variáveis.
 
-Ofertas direcionadas
+Variáveis numéricas: Idade, Distância de casa, Renda mensal, Tempo de empresa, etc.
 
-Melhorias na experiência do cliente
+Variáveis categóricas: Departamento, Cargo, Estado civil, Viagens a trabalho, etc.
 
+Target: Attrition (Sim/Não) → Dados desbalanceados (apenas 16% de casos "Sim").
 
-EN
+## 📊 Principais Desafios
+Desbalanceamento da classe target:
 
-## **📌 Overview**  
-This project aims to segment supermarket customers based on demographic and behavioral data using **unsupervised machine learning (K-Means Clustering)**.  
+Testar técnicas como Random OverSampling (ROS) e SMOTE-Tomek, mas os resultados foram piores que o modelo sem balanceamento.
 
-The dataset includes:  
-✅ **Age**  
-✅ **Gender**  
-✅ **Annual Income (k$)**  
-✅ **Spending Score (1-100)** *(a metric defined by the supermarket based on shopping behavior)*  
+Solução: Usamos class_weight='balanced' e scale_pos_weight em modelos baseados em árvores.
 
-🔗 **Original Dataset:** [Mall Customer Segmentation Data | Kaggle](https://www.kaggle.com/vjchoudhary7/customer-segmentation-tutorial-in-python)  
+Pré-processamento diferenciado:
 
----
+OneHotEncoder: Para variáveis categóricas não ordenadas.
 
-## **🎯 Goal**  
-Identify customer groups with similar traits to help the supermarket with:  
-- **Personalized marketing strategies**  
-- **Targeted promotions**  
-- **Improved customer experience**  
+OrdinalEncoder: Para variáveis ordinais (ex.: Satisfação no trabalho).
 
----
-![clusters](relatorios/imagens/clusters.png)
-## Detalhes do dataset utilizado e resumo dos resultados
+Escalonamento adaptado:
 
-🔍 Análise Exploratória (EDA)
-Foram realizadas análises estatísticas e visualizações para entender a distribuição dos dados
+MinMaxScaler: Para tarifas (DailyRate, HourlyRate, MonthlyRate).
 
-📊 Visualizações Principais
-Pairplot, histogramas, boxplots, matriz de correlação
+StandardScaler: Para Idade (distribuição próxima da normal).
 
+PowerTransformer: Para outras variáveis numéricas.
 
-⚙️ Pré-processamento
-Foram aplicadas as seguintes transformações:
+## ⚙️ Modelos Testados
 
-One-Hot Encoding para a variável categórica (Gender).
+Modelo	Ajustes Especiais	Melhor Métrica (Avg Precision)
+LogisticRegression	class_weight='balanced', GridSearch (C, penalty)	0.61
+LGBMClassifier	scale_pos_weight=5.2	0.51
+XGBClassifier	scale_pos_weight=5.2	0.46
+SGDClassifier	-	0.58
+SVC	-	0.63
+DecisionTree	class_weight='balanced'	0.226
 
-PowerTransformer para normalizar as variáveis numéricas (Age, Annual Income, Spending Score).
+## 📉 Resultados
 
+Melhor modelo: Regressão Logística com ElasticNet (C=0.1, l1_ratio=0.1).
 
-🤖 Modelagem (K-Means Clustering)
+Average Precision: 0.633
 
-📌 Segmentação dos Clientes
-Pontuação de gastos | Renda | Idade | Número Cluster
---- | --- | --- | ---
-Altos | Moderada | Jovens | 0
-Baixos | Baixo | Moderada | 1
-Altos | Alta | Jovens Adultos | 2
-Baixos | Alta | Moderada | 3
-Moderados | Moderado | Alta | 4
+Recall alto (0.73): Identifica bem funcionários propensos a sair.
 
+Precisão moderada (0.38): Reflexo do desbalanceamento.
 
-📊 Visualização 3D com PCA
-Para melhor visualização, reduzi a dimensionalidade usando PCA (3 componentes).
+## 🔎 Insights (Odds Ratio)
 
-![Segmentação](relatorios/imagens/boxplot.png)
+Fatores que AUMENTAM o risco de Attrition:
 
-📌 Conclusões
+Hora extra = Sim (3.87x mais chance).
 
-O EDA revelou padrões fundamentais sobre o comportamento dos clientes:
+Viagens frequentes (2.39x).
 
-Distribuições:
+Estado civil solteiro (1.66x).
 
-A base é equilibrada em gênero (56% mulheres, 44% homens).
+Fatores que DIMINUEM o risco:
 
-Spending Score e Annual Income têm distribuições amplas, ideais para segmentação.
+Satisfação no trabalho (0.73x).
 
-Correlação negativa entre Age e Spending Score (-0.34): clientes mais jovens tendem a gastar mais.
+Renda mensal alta (0.64x).
 
-Segmentação Inicial:
+Idade (0.90x).
 
-O pairplot mostrou potencial para agrupamentos naturais, especialmente nas relações entre renda e gastos.
+## 📌 Conclusão
 
-Boxplots por gênero indicaram que homens jovens têm maior dispersão nos gastos.
+A Regressão Logística teve o melhor desempenho, equilibrando recall e precisão.
 
+Técnicas de balanceamento (ROS, SMOTE-Tomek) não melhoraram os resultados.
 
-O modelo identificou 5 clusters com perfis distintos:
+Variáveis como hora extra, viagens e estado civil são críticas para prever attrition.
 
-Cluster 2 (19.5%): Alto potencial (alta renda + alto gasto) → Priorizar campanhas premium.
+A aplicação do modelo para a previsão de valores foi feita através do Streamlit, tornando o processo mais simples e intuitivo. O app solicita apenas a inserção do condado, idade do imóvel e renda média da região. Além disso, o app permite a visualização da região em um mapa.
 
-Cluster 4 (26.5%): Renda e gastos moderados + idade alta → Oferecer produtos de valor intermediário.
+[' Análise Preditiva de Attrition '](https://exemplocalifornia-fbps.streamlit.app/)
+![Imagem](relatorios/imagens/streamlit.png)
 
-Cluster 1 (10%): Baixa renda e gastos → Evitar investimentos pesados.
 
-Validação:
 
-Silhouette score e método elbow confirmaram que 5 clusters equilibram granularidade e interpretabilidade.
 
-Diferenças por gênero foram observadas (ex.: Cluster 0 com 60% mulheres).
+## 🚀 Próximos Passos
 
-Aplicação:
+Plano de Ação
 
-Essa segmentação permite personalizar estratégias de marketing e otimizar alocação de recursos.
+Análise de horas extras:
 
+Verificar causas (ex.: falta de staff, organização deficiente).
 
+Redução de viagens:
 
-A redução de dimensionalidade com PCA permitiu:
+Impacto no time de vendas.
 
-Visualização eficiente: Os 3 componentes principais capturaram a essência dos dados (sugerido pela variância explicada).
+Benchmark salarial:
 
-Confirmação dos clusters: A projeção 3D mostrou grupos bem separados, validando a escolha de 5 clusters.
+Comparar salários por setor com o mercado.
 
+Clima organizacional:
 
-Vantagens:
+Programas de retenção e satisfação.
 
-A técnica simplificou a comunicação dos resultados para stakeholders não técnicos.
+## Sobre a Base de Dados
 
-Facilitou a identificação de outliers e sobreposições entre clusters.
+Dataset: IBM HR Analytics Employee Attrition & Performance (Link no Kaggle).
 
-Recomendação final:
-Combinar as análises dos 3 notebooks permite criar personas de clientes e desenvolver estratégias baseadas em dados concretos.
+Attrition vs. Turnover
+Attrition: Saídas voluntárias (aposentadorias, demissões voluntárias).
 
-Link original para o dataset: https://www.kaggle.com/vjchoudhary7/customer-segmentation-tutorial-in-python
-[Link original para o dataset](https://www.kaggle.com/vjchoudhary7/customer-segmentation-tutorial-in-python)
+Turnover: Todas as saídas (voluntárias + demissões).
 
-![pairplot](relatorios/imagens/pairplot.png)
-EN
+## Organização do projeto
 
- ## **🔍 Exploratory Data Analysis (EDA)**  
-Statistical and visual analyses were performed to understand data distribution:  
+```
 
-### **📊 Key Visualizations**  
-1. **Pairplot (Variable Relationships)**  
-
-   sns.pairplot(df_analise, diag_kind='kde', hue='Gender')
-Histograms & Boxplots
-
-
-⚙️ Preprocessing
-Applied transformations:
-
-One-Hot Encoding for categorical data (Gender).
-
-PowerTransformer for numerical features (Age, Income, Spending Score).
-
-
-🤖 Modeling (K-Means Clustering)
-Pipeline
-
-📌 Customer Segments
-Cluster	Spending Score	Income	Age
-0	High	Low	Young
-1	Low	Low	Middle-aged
-2	High	High	Young Adults
-3	Low	High	Middle-aged
-4	Moderate	Moderate	Elderly
-
-📊 3D Visualization (PCA)
-Reduced dimensionality using PCA (3 components):
-
-📌 Conclusions
-The EDA revealed key patterns in customer behavior:
-
-Distributions:
-
-The base is balanced in gender (56% women, 44% men).
-
-Spending Score and Annual Income have wide distributions, ideal for segmentation.
-
-Negative correlation between Age and Spending Score (-0.34): younger customers tend to spend more.
-
-Initial Segmentation:
-
-The pairplot showed potential for natural groupings, especially in the relationships between income and spending.
-
-Boxplots by gender indicated that young men have greater dispersion in spending.
-
-The model identified 5 clusters with distinct profiles:
-
-Cluster 2 (19.5%): High potential (high income + high spending) → Prioritize premium campaigns.
-
-Cluster 4 (26.5%): Moderate income and spending + high age → Offer intermediate value products.
-
-Cluster 1 (10%): Low income and expenses → Avoid heavy investments.
-
-Validation:
-
-Silhouette score and elbow method confirmed that 5 clusters balance granularity and interpretability.
-
-Differences by gender were observed (e.g.: Cluster 0 with 60% women).
-
-Application:
-
-This segmentation allows to customize marketing strategies and optimize resource allocation.
-
-Dimensionality reduction with PCA allowed:
-
-Efficient visualization: The 3 principal components captured the essence of the data (suggested by the explained variance).
-
-Confirmation of clusters: The 3D projection showed well-separated groups, validating the choice of 5 clusters.
-
-Advantages:
-
-The technique simplified the communication of results to non-technical stakeholders.
-
-It facilitated the identification of outliers and overlaps between clusters.
-
-Final recommendation:
-Combining the analyses from the 3 notebooks allows you to create customer personas and develop strategies based on concrete data.
-
-
-Versões das bibliotecas:
-
--------------------- | ----------
-     Biblioteca      |   Versão  
--------------------- | ----------
-Matplotlib           |      3.9.2
-NumPy                |     1.26.4
-Pandas               |      2.2.3
-Scikit-Learn         |      1.5.1
-Seaborn              |     0.13.2
-
-Versão do Python: 3.12.3
+├── dados              <- Arquivos de dados para o projeto.
+├── modelos            <- Modelos gerados para o projeto.
+|
+├── notebooks          <- Cadernos Jupyter. 
+│
+|   └──src             <- Código-fonte para uso neste projeto.
+|      │
+|      ├── __init__.py  <- Torna um módulo Python
+|      ├── auxiliares.py<- Funções auxiliares do projeto
+|      ├── config.py    <- Configurações básicas do projeto
+|      ├── graficos.py  <- Scripts para criar visualizações exploratórias e orientadas a resultados
+|      └── modelos.py   <- Funções utilizadas no modelo
+|
+├── referencias        <- Dicionários de dados.
+├── relatorios         <- Relatório gerado durante o projeto utilizando a biblioteca [ydata-profiling]
+│   └── imagens        <- Gráficos e figuras gerados para serem usados em relatórios
+├── ambiente.yml       <- O arquivo de requisitos para reproduzir o ambiente de análise
+├── requirements.txt   <- O arquivo para instalar dependências via pip
+├── LICENSE            <- Licença de código aberto se uma for escolhida
+├── README.md          <- README principal para desenvolvedores que usam este projeto.
+|
+```
 
 ## Configuração do ambiente
 
@@ -263,3 +174,156 @@ Versão do Python: 3.12.3
 
 
 Para mais informações sobre como usar Git e GitHub, [clique aqui](https://cienciaprogramada.com.br/2021/09/guia-definitivo-git-github/). Sobre ambientes virtuais, [clique aqui](https://cienciaprogramada.com.br/2020/08/ambiente-virtual-projeto-python/).
+
+
+EN
+
+# 📌 Predictive Attrition Analysis
+
+Project Overview
+This project aims to predict employee attrition (turnover) in a company based on demographic, professional, and job satisfaction features. Using Machine Learning techniques, we explored different models to identify key factors influencing employee departures.
+
+## 🔍 Context
+
+The dataset contains 1,470 records with 31 variables, including:
+
+Numerical variables: Age, Distance from Home, Monthly Income, Years at Company, etc.
+
+Categorical variables: Department, Job Role, Marital Status, Business Travel, etc.
+
+Target: Attrition (Yes/No) → Imbalanced data (16% "Yes").
+
+## 📊 Key Challenges
+
+Class imbalance:
+
+Tested techniques like Random OverSampling (ROS) and SMOTE-Tomek, but results were worse than the unbalanced model.
+
+Used class_weight='balanced' and scale_pos_weight for tree-based models.
+
+Preprocessing:
+
+OneHotEncoder: Non-ordinal categorical variables.
+
+OrdinalEncoder: Ordinal variables (e.g., Job Satisfaction).
+
+Scaling:
+
+MinMaxScaler: Rates (DailyRate, HourlyRate, MonthlyRate).
+
+StandardScaler: Age (near-normal distribution).
+
+PowerTransformer: Other numerical variables (improved normalization).
+
+## ⚙️ Tested Models
+
+Model	Special Adjustments	Best Metric (Avg Precision)
+LogisticRegression	class_weight='balanced', GridSearch (C, penalty)	0.633
+LGBMClassifier	scale_pos_weight=5.2	0.504
+XGBClassifier	scale_pos_weight=5.2	0.466
+SGDClassifier	-	0.591
+SVC	-	0.630
+DecisionTree	class_weight='balanced'	0.226
+
+## 📉 Results
+
+Best model: Logistic Regression with ElasticNet (C=0.1, l1_ratio=0.1).
+
+Average Precision: 0.633
+
+High Recall (0.73): Effective at identifying employees likely to leave.
+
+Moderate Precision (0.38): Reflects class imbalance challenges.
+
+## 🔎 Key Insights (Odds Ratio)
+
+Factors that INCREASE Attrition Risk:
+
+Overtime = Yes (3.87x higher risk).
+
+Frequent Business Travel (2.39x).
+
+Single Marital Status (1.66x).
+
+Factors that DECREASE Attrition Risk:
+
+Job Satisfaction (0.73x).
+
+High Monthly Income (0.64x).
+
+Age (0.90x).
+
+## 📌 Conclusion
+
+Logistic Regression performed best, balancing recall and precision despite imbalanced data.
+
+Oversampling techniques (ROS, SMOTE-Tomek) did not improve results, likely due to loss of critical information.
+
+Variables like overtime, business travel, and marital status are critical predictors, while job satisfaction and income aid retention.
+
+## 🚀 Next Steps
+
+Action Plan
+Overtime Analysis:
+
+Investigate root causes (e.g., understaffing, poor organization, lack of training, tech gaps).
+
+Reduce Business Travel:
+
+Assess impact on sales teams.
+
+Salary Benchmarking:
+
+Compare departmental salaries to market rates.
+
+Workplace Climate Initiatives:
+
+Improve employee engagement and satisfaction.
+
+About the Dataset
+The dataset used is IBM HR Analytics Employee Attrition & Performance (Kaggle Link). It contains anonymized data from a fictional company, including demographics, job roles, satisfaction levels, and attrition status.
+
+Attrition vs. Turnover
+Attrition: Voluntary departures (retirements, resignations) leading to workforce reduction.
+
+Turnover: All departures (voluntary + involuntary), often replaced.
+
+## Technical Setup
+
+Dependencies
+Library	Version
+Python	3.12.3
+Matplotlib	3.9.2
+Pandas	2.2.3
+Scikit-Learn	1.5.1
+Seaborn	0.13.2
+Project Structure
+├── data/               # Raw/processed data  
+├── models/             # Trained models  
+├── notebooks/          # Jupyter notebooks  
+├── src/                # Source code  
+│   ├── __init__.py  
+│   ├── helpers.py      # Utility functions  
+│   ├── config.py       # Project settings  
+│   ├── plots.py        # Visualization scripts  
+│   └── models.py       # Model training  
+├── reports/            # Analysis outputs  
+│   └── images/         # Graphs/figures  
+├── environment.yml     # Conda environment  
+└── requirements.txt    # Pip dependencies  
+Setup Instructions
+Clone the repository:
+
+bash
+git clone REPO_URL  
+Create a virtual environment:
+
+Conda:
+
+bash
+conda env create -f environment.yml  
+Pip:
+
+bash
+pip install -r requirements.txt  
+
