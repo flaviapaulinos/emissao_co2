@@ -3,13 +3,13 @@ import pandas as pd
 from imblearn.pipeline import Pipeline
 
 from sklearn.model_selection import KFold, cross_validate, GridSearchCV
-from sklearn.metrics import fbeta_score, make_scorer
+#from sklearn.metrics import fbeta_score, make_scorer
 
 RANDOM_STATE = 42
 
 def construir_pipeline_modelo_classificacao(classificador, preprocessor=None):
     if preprocessor is not None:
-        pipeline = Pipeline(steps=preprocessor.steps + [("clf", classificador)])
+        pipeline = Pipeline([("preprocessor", preprocessor), ("clf", classificador)])
     else:
         pipeline = Pipeline([("clf", classificador)])
 
@@ -24,7 +24,7 @@ def treinar_e_validar_modelo_classificacao(
     classificador,
     preprocessor=None,
     multi_class=False,
-    beta=2  # Parâmetro beta para o fbeta_score
+    #beta=2  # Parâmetro beta para o fbeta_score
 ):
     model = construir_pipeline_modelo_classificacao(
         classificador,
@@ -40,7 +40,7 @@ def treinar_e_validar_modelo_classificacao(
         "recall": "recall_weighted" if multi_class else "recall",
         "roc_auc": "roc_auc_ovr" if multi_class else "roc_auc",
         "average_precision": "average_precision",
-        "f2_score": make_scorer(fbeta_score, beta=beta, average='weighted' if multi_class else 'binary')
+        #"f2_score": make_scorer(fbeta_score, beta=beta, average='weighted' if multi_class else 'binary')
     }
 
     scores = cross_validate(
@@ -62,12 +62,12 @@ def grid_search_cv_classificador(
     return_train_score=False,
     refit_metric="roc_auc",
     multi_class=False,
-    beta=2  # Parâmetro beta para o fbeta_score
+    #beta=2  # Parâmetro beta para o fbeta_score
 ):
     model = construir_pipeline_modelo_classificacao(classificador, preprocessor)
 
     # Criando o scorer para fbeta_score
-    fbeta_scorer = make_scorer(fbeta_score, beta=beta, average='weighted' if multi_class else 'binary')
+    #fbeta_scorer = make_scorer(fbeta_score, beta=beta, average='weighted' if multi_class else 'binary')
 
      # Definindo as métricas como um dicionário
     scoring = {
@@ -78,7 +78,7 @@ def grid_search_cv_classificador(
         "recall": "recall_weighted" if multi_class else "recall",
         "roc_auc": "roc_auc_ovr" if multi_class else "roc_auc",
         "average_precision": "average_precision",
-        "f2_score": make_scorer(fbeta_score, beta=beta, average='weighted' if multi_class else 'binary')
+        #"f2_score": make_scorer(fbeta_score, beta=beta, average='weighted' if multi_class else 'binary')
     }
     grid_search = GridSearchCV(
         model,
@@ -115,3 +115,7 @@ def organiza_resultados(resultados):
         pass
 
     return df_resultados_expandido
+
+
+
+
