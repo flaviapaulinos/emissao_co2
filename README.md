@@ -69,17 +69,17 @@ Fatores que AUMENTAM o risco de Attrition:
 
 Hora extra = Sim (3.87x mais chance).
 
-Viagens frequentes (2.39x).
+Formação Técnica (1.88x).
 
-Estado civil solteiro (1.66x).
+Estado civil solteiro (1.68x).
 
 Fatores que DIMINUEM o risco:
 
-Satisfação no trabalho (0.73x).
+Funcionários que não viajam têm 61% menos chance de deixar a empresa
 
-Renda mensal alta (0.64x).
+Funcionários com a renda mensal alta tem  36% menos chance de deixar a empresa
 
-Idade (0.90x).
+
 
 ## 📌 Conclusão
 
@@ -89,9 +89,9 @@ Técnicas de balanceamento (ROS, SMOTE-Tomek) não melhoraram os resultados.
 
 Variáveis como hora extra, viagens e estado civil são críticas para prever attrition.
 
-A aplicação do modelo para a previsão de valores foi feita através do Streamlit, tornando o processo mais simples e intuitivo. O app solicita apenas a inserção do condado, idade do imóvel e renda média da região. Além disso, o app permite a visualização da região em um mapa.
+A aplicação do modelo para a previsão de attrition foi feita através do Streamlit, tornando o processo mais simples e intuitivo. Além disso, o app permite a visualização da probabilidade de attrition.
 
-[' Análise Preditiva de Attrition '](https://predictive-attrition-analysis-fbps.streamlit.app/)
+['Clique aqui para "Análise Preditiva de Attrition" '](https://predictive-attrition-analysis-fbps.streamlit.app/)
 ![Imagem](relatorios/imagens/streamlit.png)
 
 
