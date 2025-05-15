@@ -1,9 +1,8 @@
-#no caso da regressão onde os modeloe stá tão redondinho, pode ser interessante fazer uma demonstração dos dados analisados
 
 import numpy as np
 import pandas as pd
 
-import plotly.express as px #para mostrar os dados da analise exploratória de forma interativa)
+import plotly.express as px #para mostrar os dados da analise exploratória de forma interativa
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 

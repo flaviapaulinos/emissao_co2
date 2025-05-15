@@ -1,5 +1,3 @@
-#no caso da regressão onde os modeloe stá tão redondinho, pode ser interessante fazer uma demonstração dos dados analisados
-
 import numpy as np
 import pandas as pd
 
