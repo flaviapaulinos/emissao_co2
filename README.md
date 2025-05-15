@@ -77,22 +77,13 @@ Testar diversos tipos de algoritmos:
 
 
 
-Modelo	RMSE (g CO2/km)	R²	Tempo Execução
-Ridge Regression	3.75	1.00	0.24s
-Linear Regression	3.67	1.00	0.29s
-KNN	3.91	1.00	0.78s
-XGBoost	26.65	0.82	0.66s
-LightGBM	26.86	0.82	1.27s
-Decision Tree	26.64	0.82	0.16s
-(Médias de 5 execuções com validação cruzada)
-
 ##### OBSERVAÇÕES INICIAIS:
 
 1. Modelos lineares (Ridge, LinearRegression) apresentam excelente desempenho (R² ~1.0)
-2. Lasso teve desempenho ruim - possivelmente alpha padrão muito alto
+2. Lasso teve desempenho ruim 
 3. Modelos baseados em árvores têm desempenho similar entre si (R² ~0.82)
 4. KNN também apresentou excelente desempenho
-"""
+
 
 ###### --- OTIMIZAÇÃO DO MODELO RIDGE ---
 
@@ -104,6 +95,7 @@ JUSTIFICATIVA PARA ESCOLHA DO RIDGE:
 3. Mais estável que LinearRegression puro
 4. Menor tempo de execução que SVM/KNN
 
+![grafico](relatorios/imagens/tipo_combustivel.png)
 
 📉 Resultados
 Melhor modelo: Ridge Regression (α=0.75)
@@ -146,7 +138,7 @@ Combustíveis alternativos (como etanol) mostraram impacto positivo na redução
 
    - Pesquisar se a razão da redução de veículos está associada ao investimento de transporte público, carros elétricos ou a um cenário econômico. Avaliar se é uma tendência e seu impacto na redução de emissão CO2. 
 
-
+![grafico](relatorios/imagens/ezgif-73f0a5d4dafbac.gif)
 EN 🇺🇸
 📊 Vehicle CO2 Emissions Analysis
 Project Overview
