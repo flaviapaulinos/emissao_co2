@@ -1,22 +1,33 @@
 from pathlib import Path
+
+
 PASTA_PROJETO = Path(__file__).resolve().parents[2]
-PASTA_RELATORIOS = PASTA_PROJETO / "relatorios"
 
 PASTA_DADOS = PASTA_PROJETO / "dados"
-PASTA_IMAGENS = PASTA_RELATORIOS / "imagens"
+
+
+
+# coloque abaixo o caminho para os arquivos de dados de seu projeto
+DADOS_2005_2014 = PASTA_DADOS / "canada_2005_2014.csv"
+DADOS_2015_2019 = PASTA_DADOS / "canada_2015_2019.csv"
+DADOS_2020 = PASTA_DADOS / "canada_2020.csv"
+DADOS_2021 = PASTA_DADOS / "canada_2021.csv"
+DADOS_2022 = PASTA_DADOS / "canada_2022.csv"
+DADOS_2023 = PASTA_DADOS / "canada_2023.csv"
+DADOS_2024 = PASTA_DADOS / "canada_2024.csv"
+DADOS_CONSOLIDADOS = PASTA_DADOS / "canada_consolidados.parquet"
+DADOS_TRATADOS = PASTA_DADOS / "canada_tratados.parquet"
+DADOS_TRAD = PASTA_DADOS / "canada_traduzidos.parquet"
+
+
+# coloque abaixo o caminho para os arquivos de modelos de seu projeto
 PASTA_MODELOS = PASTA_PROJETO / "modelos"
+MODELO_FINAL = PASTA_MODELOS / "ridge.joblib"
+
+# coloque abaixo outros caminhos que você julgar necessário
+PASTA_RELATORIOS = PASTA_PROJETO / "relatorios"
+PASTA_IMAGENS = PASTA_RELATORIOS / "imagens"
+RELATORIO = PASTA_RELATORIOS / "relatorio-eda.html"
 
 
-DADOS_ORIGINAIS = PASTA_DADOS / "employee_attrition.csv"
-DADOS_TRATADOS = PASTA_DADOS / "employee_attrition_tratados.parquet"
-DADOS_LIMPOS = PASTA_DADOS / "employee_attrition_limpos.parquet" 
-
-
-RELATORIO = PASTA_RELATORIOS / "00-fbps-eda.html"
-MODELO = PASTA_MODELOS / "modelo.pkl"
-MODELO_FINAL = PASTA_MODELOS / "logistic_regression.joblib"
-
-
-
-
-
+IMAGEM_1= PASTA_IMAGENS/"ansiedade-induzida-pelo-transito.jpg"

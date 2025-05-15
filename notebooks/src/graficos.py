@@ -1,81 +1,101 @@
 import matplotlib.pyplot as plt
-import numpy as np
 import seaborn as sns
+
+from matplotlib.ticker import EngFormatter
+from sklearn.metrics import PredictionErrorDisplay
+
+from .models import RANDOM_STATE
 
 sns.set_theme(palette="bright")
 
 PALETTE = "coolwarm"
 SCATTER_ALPHA = 0.2
 
-def grafico_componentes(estudo_pca):
-    fig, ax = plt.subplots()
-    
-    ax.plot(
-        range(1, estudo_pca['pca'].n_components_ +1),#a contagem de componentes normalmente começa com 1
-        np.cumsum(estudo_pca['pca'].explained_variance_ratio_),
-        color='C1',
-       
-    )
-    ax.axhline(y=0.85, color="C5", linestyle='--', label='85% Variância')
-    
-    ax.axhline(y=0.95, color="C4", linestyle='--', label='95% Variância')
-    ax.axhline(y=0.98, color="C0", linestyle='--', label='98% Variância')
-    
-    
-    ax.bar(
-        x=range(1, estudo_pca['pca'].n_components_ +1),
-        height= estudo_pca['pca'].explained_variance_ratio_,
-        color='C0',
-        alpha=0.5
-    )
-    ax.set_yticks(np.arange(0, 1.1, 0.1))
-    ax.grid(linestyle=':')
-    
-    ax.set_xlabel("Número de componentes")
-    ax.set_ylabel("Variância Explicada")
-    ax.set_title("Scree plot")
-    
-    ax.legend()
-        
-    plt.show()
 
-
-def plot_coeficientes(df_coefs, titulo="Coeficientes"):
-    df_coefs.plot.barh(figsize=(9,12))
-    plt.title(titulo)
+def plot_coeficientes(df_coefs, tituto="Coeficientes"):
+    df_coefs.plot.barh()
+    plt.title(tituto)
     plt.axvline(x=0, color=".5")
     plt.xlabel("Coeficientes")
     plt.gca().get_legend().remove()
-    plt.tight_layout()
     plt.show()
 
 
+def plot_residuos(y_true, y_pred):
+    residuos = y_true - y_pred
 
-def plot_comparar_metricas_modelos(df_resultados, multi_class=False):
-    fig, axs = plt.subplots(4, 2, figsize=(9, 9), sharex=True)
+    fig, axs = plt.subplots(1, 3, figsize=(12, 6))
+
+    sns.histplot(residuos, kde=True, ax=axs[0])
+
+    error_display_01 = PredictionErrorDisplay.from_predictions(
+        y_true=y_true, y_pred=y_pred, kind="residual_vs_predicted", ax=axs[1]
+    )
+
+    error_display_02 = PredictionErrorDisplay.from_predictions(
+        y_true=y_true, y_pred=y_pred, kind="actual_vs_predicted", ax=axs[2]
+    )
+
+    plt.tight_layout()
+
+    plt.show()
+
+
+def plot_residuos_estimador(estimator, X, y, eng_formatter=False, fracao_amostra=0.25):
+
+    fig, axs = plt.subplots(1, 3, figsize=(12, 6))
+
+    error_display_01 = PredictionErrorDisplay.from_estimator(
+        estimator,
+        X,
+        y,
+        kind="residual_vs_predicted",
+        ax=axs[1],
+        random_state=RANDOM_STATE,
+        scatter_kwargs={"alpha": SCATTER_ALPHA},
+        subsample=fracao_amostra,
+    )
+
+    error_display_02 = PredictionErrorDisplay.from_estimator(
+        estimator,
+        X,
+        y,
+        kind="actual_vs_predicted",
+        ax=axs[2],
+        random_state=RANDOM_STATE,
+        scatter_kwargs={"alpha": SCATTER_ALPHA},
+        subsample=fracao_amostra,
+    )
+
+    residuos = error_display_01.y_true - error_display_01.y_pred
+
+    sns.histplot(residuos, kde=True, ax=axs[0])
+
+    if eng_formatter:
+        for ax in axs:
+            ax.yaxis.set_major_formatter(EngFormatter())
+            ax.xaxis.set_major_formatter(EngFormatter())
+
+    plt.tight_layout()
+
+    plt.show()
+
+
+def plot_comparar_metricas_modelos(df_resultados):
+    fig, axs = plt.subplots(2, 2, figsize=(8, 8), sharex=True)
 
     comparar_metricas = [
         "time_seconds",
-        "test_accuracy",
-        "test_balanced_accuracy",
-        "test_f1" if not multi_class else "test_f1_weighted",
-        "test_precision" if not multi_class else "test_precision_weighted",
-        "test_recall" if not multi_class else "test_recall_weighted",
-        "test_roc_auc" if not multi_class else "test_roc_auc_ovr",
-        "test_average_precision",
-        #"test_f2_score"
+        "test_r2",
+        "test_neg_mean_absolute_error",
+        "test_neg_root_mean_squared_error",
     ]
 
     nomes_metricas = [
         "Tempo (s)",
-        "Acurácia",
-        "Acurácia balanceada",
-        "F1",
-        "Precisão",
-        "Recall",
-        "AUROC",
-        "AUPRC",
-        #"F2"
+        "R²",
+        "MAE",
+        "RMSE",
     ]
 
     for ax, metrica, nome in zip(axs.flatten(), comparar_metricas, nomes_metricas):

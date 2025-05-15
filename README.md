@@ -1,102 +1,181 @@
-# 📌 Análise Preditiva de Attrition 
-![analise](relatorios/imagens/countplot.png)
-
+# 📌 Análise emissão de CO2 por veículos 
+![imagem](relatorios/imagens/imagem1.jpg)
+Imagem de rawpixel.com no Freepik: https://br.freepik.com/fotos-gratis/trafego-lotado-e-movimentado-na-estrada_16497169.htm/
 
 PT
 
-## Visão Geral do Projeto
+📊 Análise de Emissões de CO2 em Veículos
 
-Este projeto tem como objetivo prever attrition de funcionários com base em características demográficas, profissionais e de satisfação no trabalho. Utilizei técnicas de Machine Learning para identificar os principais fatores que influenciam a saída de colaboradores.
+PT 🇧🇷
+Visão Geral do Projeto
+Este projeto tem como objetivo prever e analisar as emissões de CO2 em veículos automotores com base em características técnicas, de desempenho e categorização dos veículos. Foram utilizadas técnicas de machine learning para identificar os principais fatores que influenciam as emissões e desenvolver modelos preditivos precisos.
 
-## 🔍 Contexto
+🔍 Contexto
+Base retirada do site do [governo
+canadense](https://open.canada.ca/data/en/dataset/98f1a129-f628-4ce4-b24d-6f16bf24dd64).
 
-A base de dados contém:
+Os conjuntos de dados fornecem classificações de consumo de combustível específicas do
+modelo e emissões estimadas de dióxido de carbono para novos veículos leves para venda
+no varejo no Canadá entre os anos de 2005 e 2024.
+![grafico](relatorios/imagens/grafico_barras.png)
 
-1.470 registros e 31 variáveis.
+📊 Análise Exploratória
 
-Variáveis numéricas: idade, distância de casa, renda mensal, tempo de empresa, etc.
+#### Base: 
 
-Variáveis categóricas: departamento, cargo, estado civil, viagens a trabalho, etc.
+A relação entre número de cilindros, tamanho do motor e especialmente consumo de combustível em l por km foi constatada nas análises gráficas, assim como indicação de uma relação inversamente proporcional entre emissão de CO2 e ano do modelo. 
+Pode estar relacionado com melhores tecnologias. Precisa ser melhor avaliado para entender a razão.
 
-Target: Attrition (Sim/Não) → Dados desbalanceados (apenas 16% de casos "Sim").
+No Canadá, o uso do etanol parece estar associado a veículos de maior porte.
 
-## 📊 Principais Desafios
-
-Desbalanceamento da classe target:
-
-Testar técnicas como Random OverSampling (ROS) e SMOTE-Tomek, mas os resultados foram piores que o modelo sem balanceamento.
-
-Solução: Usei class_weight='balanced' e scale_pos_weight em modelos baseados em árvores.
-
-Pré-processamento diferenciado:
-
-OneHotEncoder: Para variáveis categóricas não ordenadas.
-
-OrdinalEncoder: Para variáveis ordinais (ex.: Satisfação no trabalho).
-
-Escalonamento adaptado:
-
-MinMaxScaler: Para tarifas (DailyRate, HourlyRate, MonthlyRate).
-
-StandardScaler: Para Idade (distribuição próxima da normal).
-
-PowerTransformer: Para outras variáveis numéricas.
-
-## ⚙️ Modelos Testados
-![comparativo](relatorios/imagens/comparativo.png)
-
-Modelo	Ajustes Especiais	Melhor Métrica (Avg Precision)
-LogisticRegression	class_weight='balanced', GridSearch (C, penalty)	0.61
-LGBMClassifier	scale_pos_weight=5.2	0.51
-XGBClassifier	scale_pos_weight=5.2	0.46
-SGDClassifier	-	0.58
-SVC	-	0.63
-DecisionTree	class_weight='balanced'	0.226
-
-## 📉 Resultados
-
-![matriz_confusao](relatorios/imagens/matriz.png)
-
-Melhor modelo: Regressão Logística com ElasticNet (C=0.1, l1_ratio=0.1).
-
-Average Precision: 0.633
-
-Recall alto (0.73): Identifica bem funcionários propensos a sair.
-
-Precisão moderada (0.38): Reflexo do desbalanceamento.
-
-## 🔎 Insights (Odds Ratio)
-
-Fatores que AUMENTAM o risco de Attrition:
-
-Hora extra = Sim (3.87x mais chance).
-
-Formação Técnica (1.88x).
-
-Estado civil solteiro (1.68x).
-
-Fatores que DIMINUEM o risco:
-
-Funcionários que não viajam têm 61% menos chance de deixar a empresa
-
-Funcionários com a renda mensal alta tem  36% menos chance de deixar a empresa
+Também é possível constatar uma queda na quantidade de veículos, no Canadá. 
 
 
+Para preparar a base para o modelo de machine learning optei por:
 
-## 📌 Conclusão
-
-A Regressão Logística teve o melhor desempenho, equilibrando recall e precisão.
-
-Técnicas de balanceamento (ROS, SMOTE-Tomek) não melhoraram os resultados.
+    * remoção de vazamento de dados (colunas que contêm informação do target)
     
-    Algumas considerações a respeito:
+    * agrupamento de categorias esparsas
     
-        • Criticidade de outliers: Em problemas como attrition, casos raros (ex: um funcionário de alto desempenho que saiu) podem ser importantes, e SMOTE/ROS podem diluir seu impacto.
-        • O modelo original (não balanceado) pode ter mantido melhor a capacidade de identificar padrões genuínos.
+    * criação de features mais robustas
+    
 
-Variáveis como hora extra, viagens e estado civil são críticas para prever attrition.
+#### Distribuições: 
 
-A aplicação do modelo para a previsão de attrition foi feita através do Streamlit, tornando o processo mais simples e intuitivo. Além disso, o app permite a visualização da probabilidade de attrition para cada caso.
+É possível perceber que a distribuição das features numéricas estão bem próximas do normal, embora umpouco assimétricas (com exceção do model_year)
+
+
+
+⚙️ Machine Learning
+
+##### ESTRATÉGIA DE PRÉ-PROCESSAMENTO:
+
+1. Variáveis categóricas não ordenadas: One-Hot Encoding
+   (para classes sem relação ordinal)
+2. Variáveis categóricas ordenadas: Ordinal Encoding
+   (para classes com relação ordinal explícita)
+3. Variáveis numéricas:
+   - Normalização Min-Max para 'model_year' (distribuição quase normal)
+   - Power Transform para outras numéricas (assimetria presente)
+
+##### DIFERENCIAÇÃO DE PRÉ-PROCESSAMENTO:
+
+1. Para modelos lineares/SVM/KNN: Normalização mais robusta
+   - OneHotEncoding para categóricas
+   - PowerTransformer para numéricas assimétricas
+2. Para modelos baseados em árvores: Menos pré-processamento necessário
+   - Apenas codificação ordinal/one-hot
+   - Não requer normalização de features numéricas
+
+###### ESTRATÉGIA DE MODELAGEM:
+Testar diversos tipos de algoritmos:
+    - Lineares (simples, interpretáveis)
+    - Baseados em árvores (potentes para relações não-lineares)
+    - SVM (para comparação)
+    - Usar validação cruzada para avaliação robusta
+    - Avaliar o melhor modelo para tunagem de hiperparâmetros
+
+
+
+Modelo	RMSE (g CO2/km)	R²	Tempo Execução
+Ridge Regression	3.75	1.00	0.24s
+Linear Regression	3.67	1.00	0.29s
+KNN	3.91	1.00	0.78s
+XGBoost	26.65	0.82	0.66s
+LightGBM	26.86	0.82	1.27s
+Decision Tree	26.64	0.82	0.16s
+(Médias de 5 execuções com validação cruzada)
+
+##### OBSERVAÇÕES INICIAIS:
+
+1. Modelos lineares (Ridge, LinearRegression) apresentam excelente desempenho (R² ~1.0)
+2. Lasso teve desempenho ruim - possivelmente alpha padrão muito alto
+3. Modelos baseados em árvores têm desempenho similar entre si (R² ~0.82)
+4. KNN também apresentou excelente desempenho
+"""
+
+###### --- OTIMIZAÇÃO DO MODELO RIDGE ---
+
+
+JUSTIFICATIVA PARA ESCOLHA DO RIDGE:
+
+1. Excelente desempenho (melhor RMSE entre os lineares)
+2. Permite interpretação dos coeficientes
+3. Mais estável que LinearRegression puro
+4. Menor tempo de execução que SVM/KNN
+
+
+📉 Resultados
+Melhor modelo: Ridge Regression (α=0.75)
+
+RMSE: 3.72 g CO2/km
+
+R²: 0.999
+
+Interpretabilidade: Excelente (coeficientes lineares)
+
+Comparativo de Modelos
+
+🔎 Insights Principais
+Fatores que AUMENTAM emissões:
+
+Consumo urbano (+0.76 coeficiente)
+
+Consumo rodoviário (+0.43)
+
+Tamanho do motor (categorias superiores)
+
+Fatores que REDUZEM emissões:
+
+Uso de etanol (-2.15 vs gasolina)
+
+Gasolina premium (-0.62 vs regular)
+
+Veículos especiais (-0.03)
+
+📌 Conclusão
+Modelos lineares apresentaram desempenho excepcional, sugerindo forte relação linear entre features e target
+
+O Ridge Regression mostrou o melhor equilíbrio entre desempenho e interpretabilidade
+
+Variáveis de consumo (urbano/rodoviário) são os principais drivers das emissões
+
+Combustíveis alternativos (como etanol) mostraram impacto positivo na redução de emissões
+
+##### Insights:
+
+   - Pesquisar se a razão da redução de veículos está associada ao investimento de transporte público, carros elétricos ou a um cenário econômico. Avaliar se é uma tendência e seu impacto na redução de emissão CO2. 
+
+
+EN 🇺🇸
+📊 Vehicle CO2 Emissions Analysis
+Project Overview
+This project aims to predict and analyze CO2 emissions from motor vehicles based on technical specifications, performance metrics, and vehicle categorization. We employed Machine Learning techniques to identify key emission factors and develop accurate predictive models.
+
+Key Findings
+Top Emission Drivers:
+
+Urban fuel consumption (strongest positive correlation)
+
+Highway fuel consumption
+
+Engine size categories
+
+Emission Reduction Factors:
+
+Ethanol fuel usage (-2.15 coefficient vs gasoline)
+
+Premium gasoline (-0.62 vs regular)
+
+Special purpose vehicles
+
+Best Performing Model:
+
+Ridge Regression (α=0.75)
+
+RMSE: 3.72 g CO2/km
+
+R²: 0.999
 
 ['Clique aqui para "Análise Preditiva de Attrition" '](https://predictive-attrition-analysis-fbps.streamlit.app/)
 ![Imagem](relatorios/imagens/streamlit.png)
@@ -104,39 +183,6 @@ A aplicação do modelo para a previsão de attrition foi feita através do Stre
 
 
 
-## 🚀 Próximos Passos
-
-
-Plano de ação
-
-Avaliar os motivos que levam os funcionários a fazerem hora extra.
-
-    Mão de obra insuficiente
-
-    Falta de organização institucional
-
-    Falta de treinamento
-
-    Necessidade de investimento em tecnologia
-
-Possibilidade de diminuir as viagens de negócios.
-
-    Como isso afeta a equipe de vendas?
-
-Atenção aos funcionários de formação técnica
-
-    Como a renda mensal se compara com o mercado? 
-
-    Ações voltadas para o clima organizacional 
-
-## Sobre a Base de Dados
-
-Dataset: IBM HR Analytics Employee Attrition & Performance (Link no Kaggle).
-
-Attrition vs. Turnover
-Attrition: Saídas voluntárias (aposentadorias, demissões voluntárias).
-
-Turnover: Todas as saídas (voluntárias + demissões).
 
 ## Organização do projeto
 
@@ -188,156 +234,4 @@ Turnover: Todas as saídas (voluntárias + demissões).
 
 
 Para mais informações sobre como usar Git e GitHub, [clique aqui](https://cienciaprogramada.com.br/2021/09/guia-definitivo-git-github/). Sobre ambientes virtuais, [clique aqui](https://cienciaprogramada.com.br/2020/08/ambiente-virtual-projeto-python/).
-
-
-EN
-
-# 📌 Predictive Attrition Analysis
-
-Project Overview
-This project aims to predict employee attrition (turnover) in a company based on demographic, professional, and job satisfaction features. Using Machine Learning techniques, we explored different models to identify key factors influencing employee departures.
-
-## 🔍 Context
-
-The dataset contains 1,470 records with 31 variables, including:
-
-Numerical variables: Age, Distance from Home, Monthly Income, Years at Company, etc.
-
-Categorical variables: Department, Job Role, Marital Status, Business Travel, etc.
-
-Target: Attrition (Yes/No) → Imbalanced data (16% "Yes").
-
-## 📊 Key Challenges
-
-Class imbalance:
-
-Tested techniques like Random OverSampling (ROS) and SMOTE-Tomek, but results were worse than the unbalanced model.
-
-Used class_weight='balanced' and scale_pos_weight for tree-based models.
-
-Preprocessing:
-
-OneHotEncoder: Non-ordinal categorical variables.
-
-OrdinalEncoder: Ordinal variables (e.g., Job Satisfaction).
-
-Scaling:
-
-MinMaxScaler: Rates (DailyRate, HourlyRate, MonthlyRate).
-
-StandardScaler: Age (near-normal distribution).
-
-PowerTransformer: Other numerical variables (improved normalization).
-
-## ⚙️ Tested Models
-
-Model	Special Adjustments	Best Metric (Avg Precision)
-LogisticRegression	class_weight='balanced', GridSearch (C, penalty)	0.633
-LGBMClassifier	scale_pos_weight=5.2	0.504
-XGBClassifier	scale_pos_weight=5.2	0.466
-SGDClassifier	-	0.591
-SVC	-	0.630
-DecisionTree	class_weight='balanced'	0.226
-
-## 📉 Results
-
-Best model: Logistic Regression with ElasticNet (C=0.1, l1_ratio=0.1).
-
-Average Precision: 0.633
-
-High Recall (0.73): Effective at identifying employees likely to leave.
-
-Moderate Precision (0.38): Reflects class imbalance challenges.
-
-## 🔎 Key Insights (Odds Ratio)
-
-Factors that INCREASE Attrition Risk:
-
-Overtime = Yes (3.87x higher risk).
-
-Frequent Business Travel (2.39x).
-
-Single Marital Status (1.66x).
-
-Factors that DECREASE Attrition Risk:
-
-Job Satisfaction (0.73x).
-
-High Monthly Income (0.64x).
-
-Age (0.90x).
-
-## 📌 Conclusion
-
-Logistic Regression performed best, balancing recall and precision despite imbalanced data.
-
-Oversampling techniques (ROS, SMOTE-Tomek) did not improve results, likely due to loss of critical information.
-
-Variables like overtime, business travel, and marital status are critical predictors, while job satisfaction and income aid retention.
-
-## 🚀 Next Steps
-
-Action Plan
-Overtime Analysis:
-
-Investigate root causes (e.g., understaffing, poor organization, lack of training, tech gaps).
-
-Reduce Business Travel:
-
-Assess impact on sales teams.
-
-Salary Benchmarking:
-
-Compare departmental salaries to market rates.
-
-Workplace Climate Initiatives:
-
-Improve employee engagement and satisfaction.
-
-About the Dataset
-The dataset used is IBM HR Analytics Employee Attrition & Performance (Kaggle Link). It contains anonymized data from a fictional company, including demographics, job roles, satisfaction levels, and attrition status.
-
-Attrition vs. Turnover
-Attrition: Voluntary departures (retirements, resignations) leading to workforce reduction.
-
-Turnover: All departures (voluntary + involuntary), often replaced.
-
-## Technical Setup
-
-Dependencies
-Library	Version
-Python	3.12.3
-Matplotlib	3.9.2
-Pandas	2.2.3
-Scikit-Learn	1.5.1
-Seaborn	0.13.2
-Project Structure
-├── data/               # Raw/processed data  
-├── models/             # Trained models  
-├── notebooks/          # Jupyter notebooks  
-├── src/                # Source code  
-│   ├── __init__.py  
-│   ├── helpers.py      # Utility functions  
-│   ├── config.py       # Project settings  
-│   ├── plots.py        # Visualization scripts  
-│   └── models.py       # Model training  
-├── reports/            # Analysis outputs  
-│   └── images/         # Graphs/figures  
-├── environment.yml     # Conda environment  
-└── requirements.txt    # Pip dependencies  
-Setup Instructions
-Clone the repository:
-
-bash
-git clone REPO_URL  
-Create a virtual environment:
-
-Conda:
-
-bash
-conda env create -f environment.yml  
-Pip:
-
-bash
-pip install -r requirements.txt  
 

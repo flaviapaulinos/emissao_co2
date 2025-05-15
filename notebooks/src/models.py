@@ -1,98 +1,88 @@
 import pandas as pd
 
-from imblearn.pipeline import Pipeline
-
+from sklearn.compose import TransformedTargetRegressor
 from sklearn.model_selection import KFold, cross_validate, GridSearchCV
-#from sklearn.metrics import fbeta_score, make_scorer
+from sklearn.pipeline import Pipeline
 
 RANDOM_STATE = 42
 
-def construir_pipeline_modelo_classificacao(classificador, preprocessor=None):
+
+def construir_pipeline_modelo_regressao(
+    regressor, preprocessor=None, target_transformer=None
+):
     if preprocessor is not None:
-        pipeline = Pipeline([("preprocessor", preprocessor), ("clf", classificador)])
+        pipeline = Pipeline([("preprocessor", preprocessor), ("reg", regressor)])
     else:
-        pipeline = Pipeline([("clf", classificador)])
+        pipeline = Pipeline([("reg", regressor)])
 
-    model = pipeline
-
+    if target_transformer is not None:
+        model = TransformedTargetRegressor(
+            regressor=pipeline, transformer=target_transformer
+        )
+    else:
+        model = pipeline
     return model
 
-def treinar_e_validar_modelo_classificacao(
+
+def treinar_e_validar_modelo_regressao(
     X,
     y,
-    cv,
-    classificador,
+    regressor,
     preprocessor=None,
-    multi_class=False,
-    #beta=2  # Parâmetro beta para o fbeta_score
+    target_transformer=None,
+    n_splits=5,
+    random_state=RANDOM_STATE,
 ):
-    model = construir_pipeline_modelo_classificacao(
-        classificador,
-        preprocessor,
+
+    model = construir_pipeline_modelo_regressao(
+        regressor, preprocessor, target_transformer
     )
 
-    # Definindo as métricas como um dicionário
-    scoring = {
-        "accuracy": "accuracy",
-        "balanced_accuracy": "balanced_accuracy",
-        "f1": "f1_weighted" if multi_class else "f1",
-        "precision": "precision_weighted" if multi_class else "precision",
-        "recall": "recall_weighted" if multi_class else "recall",
-        "roc_auc": "roc_auc_ovr" if multi_class else "roc_auc",
-        "average_precision": "average_precision",
-        #"f2_score": make_scorer(fbeta_score, beta=beta, average='weighted' if multi_class else 'binary')
-    }
+    kf = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
 
     scores = cross_validate(
         model,
         X,
         y,
-        cv=cv,
-        scoring=scoring,  # Passando o dicionário de métricas
+        cv=kf,
+        scoring=[
+            "r2",
+            "neg_mean_absolute_error",
+            "neg_root_mean_squared_error",
+        ],
     )
 
     return scores
 
 
-def grid_search_cv_classificador(
-    classificador,
+def grid_search_cv_regressor(
+    regressor,
     param_grid,
-    cv,
     preprocessor=None,
+    target_transformer=None,
+    n_splits=5,
+    random_state=RANDOM_STATE,
     return_train_score=False,
-    refit_metric="roc_auc",
-    multi_class=False,
-    #beta=2  # Parâmetro beta para o fbeta_score
 ):
-    model = construir_pipeline_modelo_classificacao(classificador, preprocessor)
+    model = construir_pipeline_modelo_regressao(
+        regressor, preprocessor, target_transformer
+    )
 
-    # Criando o scorer para fbeta_score
-    #fbeta_scorer = make_scorer(fbeta_score, beta=beta, average='weighted' if multi_class else 'binary')
+    kf = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
 
-     # Definindo as métricas como um dicionário
-    scoring = {
-        "accuracy": "accuracy",
-        "balanced_accuracy": "balanced_accuracy",
-        "f1": "f1_weighted" if multi_class else "f1",
-        "precision": "precision_weighted" if multi_class else "precision",
-        "recall": "recall_weighted" if multi_class else "recall",
-        "roc_auc": "roc_auc_ovr" if multi_class else "roc_auc",
-        "average_precision": "average_precision",
-        #"f2_score": make_scorer(fbeta_score, beta=beta, average='weighted' if multi_class else 'binary')
-    }
     grid_search = GridSearchCV(
         model,
-        cv=cv,
+        cv=kf,
         param_grid=param_grid,
-        scoring=scoring,
-        refit=refit_metric,
+        scoring=["r2", "neg_mean_absolute_error", "neg_root_mean_squared_error"],
+        refit="neg_root_mean_squared_error",
         n_jobs=-1,
         return_train_score=return_train_score,
         verbose=1,
     )
-       
 
     return grid_search
+
 
 def organiza_resultados(resultados):
 
@@ -115,7 +105,3 @@ def organiza_resultados(resultados):
         pass
 
     return df_resultados_expandido
-
-
-
-
