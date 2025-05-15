@@ -7,4 +7,4 @@ scikit_learn==1.6.1
 seaborn==0.13.2
 streamlit==1.42.2
 pyarrow==14.0.0
-
+rich==10.14.0,<14.0.0  # Para evitar conflito com Streamlit
