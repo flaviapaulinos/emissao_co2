@@ -1,8 +1,11 @@
 # 📌 Análise emissão de CO2 por veículos 
 ![imagem](relatorios/imagens/imagem1.jpg)
-Imagem de rawpixel.com no Freepik: https://br.freepik.com/fotos-gratis/trafego-lotado-e-movimentado-na-estrada_16497169.htm/
+<p align="center">
+  <sub>
+    Image by rawpixel.com on Freepik: https://br.freepik.com/fotos-gratis/trafego-lotado-e-movimentado-na-estrada_16497169.htm/
+  </sub>
+</p>
 
-PT
 
 📊 Análise de Emissões de CO2 em Veículos
 
