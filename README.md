@@ -27,7 +27,7 @@ no varejo no Canadá entre os anos de 2005 e 2024.
 
 #### Base: 
 
-A relação entre número de cilindros, tamanho do motor e especialmente consumo de combustível em l por km foi constatada nas análises gráficas, assim como indicação de uma relação inversamente proporcional entre emissão de CO2 e ano do modelo. 
+A relação entre número de cilindros, tamanho do motor e especialmente consumo de combustível em litros por km foi constatada nas análises gráficas, assim como indicação de uma relação inversamente proporcional entre emissão de CO2 e ano do modelo. 
 Pode estar relacionado com melhores tecnologias. Precisa ser melhor avaliado para entender a razão.
 
 No Canadá, o uso do etanol parece estar associado a veículos de maior porte.
