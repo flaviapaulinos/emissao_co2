@@ -27,12 +27,11 @@ no varejo no Canadá entre os anos de 2005 e 2024.
 
 #### Base: 
 
-A relação entre número de cilindros, tamanho do motor e especialmente consumo de combustível em litros por km foi constatada nas análises gráficas, assim como indicação de uma relação inversamente proporcional entre emissão de CO2 e ano do modelo. 
-Pode estar relacionado com melhores tecnologias. Precisa ser melhor avaliado para entender a razão.
+Nas análises gráficas, foi constatada a relação entre número de cilindros, tamanho do motor e especialmente consumo de combustível em litros por km , assim como indicação de uma relação inversamente proporcional entre emissão de CO2 e ano do modelo - pode estar relacionado com melhores tecnologias - precisa ser melhor avaliado para entender a razão.
 
 No Canadá, o uso do etanol parece estar associado a veículos de maior porte.
 
-Também é possível constatar uma queda na quantidade de veículos, no Canadá. 
+Também é possível constatar uma queda na quantidade de veículos, no país. 
 
 
 Para preparar a base para o modelo de machine learning optei por:
@@ -46,7 +45,7 @@ Para preparar a base para o modelo de machine learning optei por:
 
 #### Distribuições: 
 
-É possível perceber que a distribuição das features numéricas estão bem próximas do normal, embora umpouco assimétricas (com exceção do model_year)
+É possível perceber que a distribuição das features numéricas estão bem próximas do normal, embora um pouco assimétricas (com exceção do model_year).
 
 
 
