@@ -152,7 +152,7 @@ O primeiro link traz um gráfico super bacana (treemap) que permite a interaçã
 ['Clique aqui para explorar os dados e fazer uma estimativa '](https://emissaoco2-fbps.streamlit.app/)
 
 
-O segundo app é para quem não gosta de esperar, traz todas as informações e gráficos menos o treemap e o filtro=)
+O segundo app é para quem não gosta de esperar, traz todas as informações e gráficos menos o treemap e o filtro.
 
 ['Clique aqui para explorar os dados e fazer uma estimativa '](https://emissaoco2-fast-fbps.streamlit.app/)
 
