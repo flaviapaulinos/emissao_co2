@@ -117,7 +117,6 @@ with aba1:
     **Fique à vontade para explorar!**  
     
     Você pode interagir com os gráficos e tabelas:  
-    - Adicione filtros  
     - Amplie áreas específicas  
     - Clique nas legendas para ativar/desativar itens  
     """)
