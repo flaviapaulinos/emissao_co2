@@ -7,13 +7,13 @@
 </p>
 
 
-📊 Análise de Emissões de CO2 em Veículos
+## 📊 Análise de Emissões de CO2 em Veículos
 
 PT 🇧🇷
 Visão Geral do Projeto
 Este projeto tem como objetivo prever e analisar as emissões de CO2 em veículos automotores com base em características técnicas, de desempenho e categorização dos veículos. Foram utilizadas técnicas de machine learning para identificar os principais fatores que influenciam as emissões e desenvolver modelos preditivos precisos.
 
-🔍 Contexto
+## 🔍 Contexto
 Base retirada do site do [governo
 canadense](https://open.canada.ca/data/en/dataset/98f1a129-f628-4ce4-b24d-6f16bf24dd64).
 
@@ -22,7 +22,7 @@ modelo e emissões estimadas de dióxido de carbono para novos veículos leves p
 no varejo no Canadá entre os anos de 2005 e 2024.
 ![grafico](relatorios/imagens/grafico_barras.png)
 
-📊 Análise Exploratória
+## 📊 Análise Exploratória
 
 #### Base: 
 
@@ -49,9 +49,9 @@ Para preparar a base para o modelo de machine learning optei por:
 
 
 
-⚙️ Machine Learning
+## ⚙️ Machine Learning
 
-##### ESTRATÉGIA DE PRÉ-PROCESSAMENTO:
+#### ESTRATÉGIA DE PRÉ-PROCESSAMENTO:
 
 1. Variáveis categóricas não ordenadas: One-Hot Encoding
    (para classes sem relação ordinal)
@@ -70,7 +70,7 @@ Para preparar a base para o modelo de machine learning optei por:
    - Apenas codificação ordinal/one-hot
    - Não requer normalização de features numéricas
 
-###### ESTRATÉGIA DE MODELAGEM:
+#### ESTRATÉGIA DE MODELAGEM:
 Testar diversos tipos de algoritmos:
     - Lineares (simples, interpretáveis)
     - Baseados em árvores (potentes para relações não-lineares)
@@ -80,7 +80,7 @@ Testar diversos tipos de algoritmos:
 
 
 
-##### OBSERVAÇÕES INICIAIS:
+#### OBSERVAÇÕES INICIAIS:
 
 1. Modelos lineares (Ridge, LinearRegression) apresentam excelente desempenho (R² ~1.0)
 2. Lasso teve desempenho ruim 
@@ -88,7 +88,7 @@ Testar diversos tipos de algoritmos:
 4. KNN também apresentou excelente desempenho
 
 
-###### --- OTIMIZAÇÃO DO MODELO RIDGE ---
+### --- OTIMIZAÇÃO DO MODELO RIDGE ---
 
 
 JUSTIFICATIVA PARA ESCOLHA DO RIDGE:
@@ -109,7 +109,7 @@ R²: 0.999
 
 Interpretabilidade: Excelente (coeficientes lineares)
 
-Comparativo de Modelos
+#### Comparativo de Modelos
 
 🔎 Insights Principais
 Fatores que AUMENTAM emissões:
@@ -128,7 +128,7 @@ Gasolina premium (-0.62 vs regular)
 
 Veículos especiais (-0.03)
 
-📌 Conclusão
+## 📌 Conclusão
 Modelos lineares apresentaram desempenho excepcional, sugerindo forte relação linear entre features e target
 
 O Ridge Regression mostrou o melhor equilíbrio entre desempenho e interpretabilidade
@@ -137,13 +137,15 @@ Variáveis de consumo (urbano/rodoviário) são os principais drivers das emiss�
 
 Combustíveis alternativos (como etanol) mostraram impacto positivo na redução de emissões
 
-##### Insights:
+### Insights:
 
    - Pesquisar se a razão da redução de veículos está associada ao investimento de transporte público, carros elétricos ou a um cenário econômico. Avaliar se é uma tendência e seu impacto na redução de emissão CO2. 
 
 
 ![grafico](relatorios/imagens/ezgif-72d0dc05046601.gif)
-## Nos links abaixo você encontra os links para um app com os dados, gráficos interativos e o resultado do modelo, onde você pode inserir os dados de um veículo e estimar quanto ele emite de dióxido de carbono.
+## App
+
+#### Nos links abaixo você encontra os links para um app com os dados, gráficos interativos e o resultado do modelo, onde você pode inserir os dados de um veículo e estimar quanto ele emite de dióxido de carbono.
 
 O primeiro link traz um gráfico super bacana (treemap) que permite a interação por fabricante, ano do modelo, marca. Ao passar o cursor sobre ele, também mostra informações sobre combustível, quantidade de veículos e emissão de dióxido de carbono. Como esse gráfico traz muitas informações e 'interações', o carregamento do app é mais lento, exige um pouco de paciência.
 
@@ -161,18 +163,18 @@ O segundo app é para quem não gosta de esperar, traz todas as informações e 
 
 EN
 
-📊 CO2 Emissions Analysis in Vehicles
+## 📊 CO2 Emissions Analysis in Vehicles
 
 🇬🇧 Project Overview
 This project aims to predict and analyze CO2 emissions from motor vehicles based on technical specifications, performance, and vehicle categorization. Machine learning techniques were used to identify the main factors influencing emissions and to develop accurate predictive models.
 
-🔍 Context
+## 🔍 Context
 Dataset sourced from the Canadian government.
 
 The datasets provide model-specific fuel consumption ratings and estimated carbon dioxide emissions for new light-duty vehicles available for retail sale in Canada between 2005 and 2024.
+![grafico](relatorios/imagens/make_co2.png)
 
-
-📊 Exploratory Analysis
+## 📊 Exploratory Analysis
 
 Dataset:
 The relationship between the number of cylinders, engine size, and especially fuel consumption in liters per km was observed in graphical analyses, along with an indication of an inverse relationship between CO2 emissions and model year.
@@ -193,9 +195,9 @@ Creation of more robust features
 Distributions:
 It is noticeable that the distribution of numerical features is close to normal, although slightly skewed (except for model_year).
 
-⚙️ Machine Learning
+## ⚙️ Machine Learning
 
-PREPROCESSING STRATEGY:
+#### PREPROCESSING STRATEGY:
 Unordered categorical variables: One-Hot Encoding
 (for classes without ordinal relationship)
 
@@ -208,7 +210,7 @@ Min-Max Normalization for model_year (nearly normal distribution)
 
 Power Transform for other numerical features (due to skewness)
 
-DIFFERENTIATED PREPROCESSING:
+#### DIFFERENTIATED PREPROCESSING:
 For linear/SVM/KNN models: more robust normalization
 
 OneHotEncoding for categorical variables
@@ -221,7 +223,7 @@ Only ordinal/one-hot encoding
 
 No normalization required for numerical features
 
-MODELING STRATEGY:
+#### MODELING STRATEGY:
 Test various types of algorithms:
 
 Linear models (simple, interpretable)
@@ -243,7 +245,7 @@ Tree-based models had similar performance (R² ~0.82)
 
 KNN also performed very well
 
---- RIDGE MODEL OPTIMIZATION ---
+#### --- RIDGE MODEL OPTIMIZATION ---
 REASONS FOR CHOOSING RIDGE:
 
 Excellent performance (best RMSE among linear models)
@@ -255,16 +257,16 @@ More stable than pure LinearRegression
 Faster execution time than SVM/KNN
 
 
-📉 Results
+## 📉 Results
 Best model: Ridge Regression (α=0.75)
 
 RMSE: 3.72 g CO2/km
 R²: 0.999
 Interpretability: Excellent (linear coefficients)
 
-Model Comparison
+## Model Comparison
 
-🔎 Key Insights
+###  🔎 Key Insights
 
 Factors that INCREASE emissions:
 
@@ -282,7 +284,7 @@ Premium gasoline (-0.62 vs regular)
 
 Special vehicles (-0.03)
 
-📌 Conclusion
+## 📌 Conclusion
 Linear models showed exceptional performance, suggesting a strong linear relationship between features and target.
 
 Ridge Regression provided the best balance between performance and interpretability.
@@ -295,7 +297,7 @@ Further Insights:
 Investigate whether the reduction in the number of vehicles is associated with public transportation investment, electric vehicles, or economic conditions. Assess whether this is a trend and its impact on CO2 emissions.
 
 
-
+## App
 
 The links below take you to an app with the data, interactive charts, and the model results, where you can input vehicle data and estimate how much carbon dioxide it emits.
 The first link includes a very cool treemap that allows interaction by manufacturer, model year, and brand. Hovering over the chart shows information about fuel type, number of vehicles, and CO2 emissions. Since this chart has lots of information and interaction, the app may take longer to load — a bit of patience is needed.
