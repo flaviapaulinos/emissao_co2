@@ -169,8 +169,8 @@ RMSE: 3.72 g CO2/km
 
 R²: 0.999
 
-['Clique aqui para "Análise Preditiva de Attrition" '](https://predictive-attrition-analysis-fbps.streamlit.app/)
-![Imagem](relatorios/imagens/streamlit.png)
+['Clique aqui para explorar os dados e fazer uma estimativa '](https://emissaoco2-fbps.streamlit.app/)
+![grafico](relatorios/imagens/ezgif-72d0dc05046601.gif)
 
 
 
