@@ -138,41 +138,174 @@ Combustíveis alternativos (como etanol) mostraram impacto positivo na redução
 
    - Pesquisar se a razão da redução de veículos está associada ao investimento de transporte público, carros elétricos ou a um cenário econômico. Avaliar se é uma tendência e seu impacto na redução de emissão CO2. 
 
+
+![grafico](relatorios/imagens/ezgif-72d0dc05046601.gif)
+## Nos links abaixo você encontra os links para um app com os dados, gráficos interativos e o resultado do modelo, onde você pode inserir os dados de um veículo e estimar quanto ele emite de dióxido de carbono.
+
+O primeiro link traz um gráfico super bacana (treemap) que permite a interação por fabricante, ano do modelo, marca. Ao passar o cursor sobre ele, também mostra informações sobre combustível, quantidade de veículos e emissão de dióxido de carbono. Como esse gráfico traz muitas informações e 'interações', o carregamento do app é mais lento, exige um pouco de paciência.
+
+['Clique aqui para explorar os dados e fazer uma estimativa '](https://emissaoco2-fbps.streamlit.app/)
+
+
+O segundo app é para quem não gosta de esperar, traz todas as informações e gráficos menos o treemap! =)
+
+['Clique aqui para explorar os dados e fazer uma estimativa '](https://emissaoco2-fbps.streamlit.app/)
+
 ![grafico](relatorios/imagens/ezgif-73f0a5d4dafbac.gif)
-EN 🇺🇸
-📊 Vehicle CO2 Emissions Analysis
-Project Overview
-This project aims to predict and analyze CO2 emissions from motor vehicles based on technical specifications, performance metrics, and vehicle categorization. We employed Machine Learning techniques to identify key emission factors and develop accurate predictive models.
 
-Key Findings
-Top Emission Drivers:
+📌 CO2 Emissions Analysis by Vehicles
 
-Urban fuel consumption (strongest positive correlation)
 
-Highway fuel consumption
+EN
 
-Engine size categories
+📊 CO2 Emissions Analysis in Vehicles
 
-Emission Reduction Factors:
+🇬🇧 Project Overview
+This project aims to predict and analyze CO2 emissions from motor vehicles based on technical specifications, performance, and vehicle categorization. Machine learning techniques were used to identify the main factors influencing emissions and to develop accurate predictive models.
 
-Ethanol fuel usage (-2.15 coefficient vs gasoline)
+🔍 Context
+Dataset sourced from the Canadian government.
+
+The datasets provide model-specific fuel consumption ratings and estimated carbon dioxide emissions for new light-duty vehicles available for retail sale in Canada between 2005 and 2024.
+
+
+📊 Exploratory Analysis
+
+Dataset:
+The relationship between the number of cylinders, engine size, and especially fuel consumption in liters per km was observed in graphical analyses, along with an indication of an inverse relationship between CO2 emissions and model year.
+This may be related to improved technology. Further analysis is needed to understand the reason.
+
+In Canada, ethanol use appears to be associated with larger vehicles.
+
+A decline in the number of vehicles in Canada was also observed.
+
+To prepare the dataset for the machine learning model, I opted for:
+
+Removal of data leakage (columns containing target information)
+
+Grouping of sparse categories
+
+Creation of more robust features
+
+Distributions:
+It is noticeable that the distribution of numerical features is close to normal, although slightly skewed (except for model_year).
+
+⚙️ Machine Learning
+
+PREPROCESSING STRATEGY:
+Unordered categorical variables: One-Hot Encoding
+(for classes without ordinal relationship)
+
+Ordered categorical variables: Ordinal Encoding
+(for classes with explicit ordinal relationship)
+
+Numerical variables:
+
+Min-Max Normalization for model_year (nearly normal distribution)
+
+Power Transform for other numerical features (due to skewness)
+
+DIFFERENTIATED PREPROCESSING:
+For linear/SVM/KNN models: more robust normalization
+
+OneHotEncoding for categorical variables
+
+PowerTransformer for skewed numerical features
+
+For tree-based models: less preprocessing required
+
+Only ordinal/one-hot encoding
+
+No normalization required for numerical features
+
+MODELING STRATEGY:
+Test various types of algorithms:
+
+Linear models (simple, interpretable)
+
+Tree-based models (powerful for non-linear relationships)
+
+SVM (for comparison)
+
+Use cross-validation for robust evaluation
+
+Evaluate the best model for hyperparameter tuning
+
+INITIAL OBSERVATIONS:
+Linear models (Ridge, LinearRegression) showed excellent performance (R² ~1.0)
+
+Lasso performed poorly
+
+Tree-based models had similar performance (R² ~0.82)
+
+KNN also performed very well
+
+--- RIDGE MODEL OPTIMIZATION ---
+REASONS FOR CHOOSING RIDGE:
+
+Excellent performance (best RMSE among linear models)
+
+Allows interpretation of coefficients
+
+More stable than pure LinearRegression
+
+Faster execution time than SVM/KNN
+
+
+📉 Results
+Best model: Ridge Regression (α=0.75)
+
+RMSE: 3.72 g CO2/km
+R²: 0.999
+Interpretability: Excellent (linear coefficients)
+
+Model Comparison
+
+🔎 Key Insights
+
+Factors that INCREASE emissions:
+
+City consumption (+0.76 coefficient)
+
+Highway consumption (+0.43)
+
+Engine size (higher categories)
+
+Factors that DECREASE emissions:
+
+Ethanol use (-2.15 vs gasoline)
 
 Premium gasoline (-0.62 vs regular)
 
-Special purpose vehicles
+Special vehicles (-0.03)
 
-Best Performing Model:
+📌 Conclusion
+Linear models showed exceptional performance, suggesting a strong linear relationship between features and target.
 
-Ridge Regression (α=0.75)
+Ridge Regression provided the best balance between performance and interpretability.
 
-RMSE: 3.72 g CO2/km
+Consumption variables (city/highway) are the main drivers of emissions.
 
-R²: 0.999
+Alternative fuels (such as ethanol) showed a positive impact on reducing emissions.
+
+Further Insights:
+Investigate whether the reduction in the number of vehicles is associated with public transportation investment, electric vehicles, or economic conditions. Assess whether this is a trend and its impact on CO2 emissions.
+
+
+
+
+The links below take you to an app with the data, interactive charts, and the model results, where you can input vehicle data and estimate how much carbon dioxide it emits.
+The first link includes a very cool treemap that allows interaction by manufacturer, model year, and brand. Hovering over the chart shows information about fuel type, number of vehicles, and CO2 emissions. Since this chart has lots of information and interaction, the app may take longer to load — a bit of patience is needed.
+
+Click here to explore the data and make an estimate
 
 ['Clique aqui para explorar os dados e fazer uma estimativa '](https://emissaoco2-fbps.streamlit.app/)
+
+The second app is for those who don't like waiting — it contains all the information and charts, except the treemap! =)
+
+['Clique aqui para explorar os dados e fazer uma estimativa '](https://emissaoco2-fbps.streamlit.app/)
+
 ![grafico](relatorios/imagens/ezgif-72d0dc05046601.gif)
-
-
 
 
 
