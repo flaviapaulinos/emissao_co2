@@ -18,6 +18,9 @@ from joblib import load
 
 from notebooks.src.config import DADOS_TRATADOS, DADOS_TRAD, MODELO_FINAL, IMAGEM_1
 
+#configuração para o streamlit
+st.set_page_config(page_title="Seu App", layout="wide")
+
 #para o arquivo não ficar sendo recarregado o tempo inteiro
 @st.cache_data
 def carregar_dados(arquivo):
